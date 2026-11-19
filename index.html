@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henry Li. Six builds, fixed price and days.</title>
+<meta name="description" content="Landing pages, automation, integrations, web apps, agent pipelines and ad creative. Fixed price, fixed days, and the evidence behind each row.">
+<link rel="preload" href="./fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@layer ui-sdk;
+@font-face{font-family:"Archivo";src:url("./fonts/archivo-latin.woff2") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}
+:root{
+  --ground:#eef1f2;--raise:#e4e9ea;--ink:#0f1416;--ink-2:#3a464a;--ink-3:#5d6a6e;
+  --rule:#c6d0d2;--rule-2:#a3b0b3;--signal:#b23a17;--bar:#cfd8da;
+  --measure:32rem;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;font-size:1rem;line-height:1.55;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,dl,dd,dt{margin:0}
+ul{padding-left:1.05rem}
+li{margin-block:.25rem}
+a{color:inherit}
+.wrap{max-width:82rem;margin-inline:auto;padding-inline:clamp(1.25rem,4vw,3.5rem)}
+.head{padding-block:clamp(1.5rem,3vw,2.5rem) clamp(2rem,4vw,3rem);border-bottom:1px solid var(--rule-2)}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;font-size:.8125rem;color:var(--ink-3)}
+h1{font-size:clamp(2.1rem,5.1vw,4.4rem);line-height:.98;letter-spacing:-.035em;font-weight:700;max-width:19ch;margin-top:clamp(1.75rem,4vw,3rem);text-wrap:balance}
+.dek{max-width:var(--measure);color:var(--ink-2);margin-top:1.25rem;font-size:1.0625rem}
+.cta{display:inline-block;margin-top:1.75rem;background:var(--ink);color:var(--ground);text-decoration:none;font-weight:600;padding:.85rem 1.35rem;border:1px solid var(--ink);border-radius:2px}
+.cta:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+section{padding-block:clamp(2.5rem,4.5vw,3.75rem);border-bottom:1px solid var(--rule)}
+h2{font-size:clamp(1.35rem,2.2vw,1.75rem);letter-spacing:-.02em;font-weight:700;line-height:1.15;max-width:34ch}
+.note{max-width:var(--measure);color:var(--ink-2);margin-top:.75rem;font-size:.9375rem}
+table{width:100%;border-collapse:collapse;margin-top:clamp(1.5rem,3vw,2.25rem);text-align:left}
+thead th{font-size:.8125rem;font-weight:600;color:var(--ink-3);padding-block:.6rem;border-bottom:1px solid var(--rule-2);vertical-align:bottom}
+tbody th,tbody td{padding-block:.85rem;border-bottom:1px solid var(--rule);vertical-align:middle}
+tbody th{width:38%;font-weight:600;text-align:left}
+.diag{display:block;font-weight:600}
+.site{display:block;font-size:.8125rem;font-weight:400;color:var(--ink-3);margin-top:.15rem}
+td.num,th.num{text-align:right;white-space:nowrap;padding-left:1rem}
+td.bytes{padding-left:1rem}
+.value{display:inline-block;min-width:5.2rem;font-weight:600}
+.bar{display:inline-block;vertical-align:middle;width:min(9rem,18vw);height:.6rem;background:var(--bar);margin-left:.5rem}
+.fill{display:block;height:100%;background:var(--ink-2)}
+tr.own .fill{background:var(--signal)}
+.bad{color:var(--signal);font-weight:600}
+td.verdict{text-align:right;white-space:nowrap;padding-left:1rem;font-weight:600}
+tr.own{background:var(--raise)}
+tr.own th,tr.own td{border-bottom:1px solid var(--rule-2)}
+.ledger{margin-top:0}
+.ledger th[scope="row"]{padding-right:1rem}
+dl.stats{margin-top:clamp(1.5rem,3vw,2rem);border-top:1px solid var(--rule)}
+dl.stats div{display:grid;grid-template-columns:14rem minmax(0,1fr);gap:1rem;padding-block:.9rem;border-bottom:1px solid var(--rule);align-items:baseline}
+dl.stats dt{font-size:1.25rem;font-weight:700;letter-spacing:-.01em}
+dl.stats dd{color:var(--ink-2);font-size:.9375rem}
+td.ends{color:var(--ink-2);font-size:.9375rem;padding-right:1rem}
+td.more{text-align:right;white-space:nowrap;padding-left:1rem}
+.more-btn{font:inherit;font-size:.875rem;font-weight:600;background:none;border:0;padding:.25rem 0;color:var(--ink);text-decoration:underline;text-underline-offset:.25em;cursor:pointer}
+.more-btn:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.close-note{max-width:var(--measure);color:var(--ink-2);margin-top:1rem;font-size:.9375rem}
+.cmd{margin-top:1.5rem;font-size:.875rem;overflow-wrap:anywhere}
+.cmd code{background:var(--raise);border:1px solid var(--rule);padding:.55rem .75rem;display:inline-block;font-family:inherit}
+footer{padding-block:2rem 3rem;color:var(--ink-3);font-size:.8125rem;line-height:1.7;border-top:1px solid var(--rule-2)}
+footer p{max-width:var(--measure)}
+.w2{width:2%}.w4{width:4%}.w6{width:6%}.w8{width:8%}.w10{width:10%}.w12{width:12%}.w14{width:14%}.w16{width:16%}.w18{width:18%}.w20{width:20%}.w22{width:22%}.w24{width:24%}.w26{width:26%}.w28{width:28%}.w30{width:30%}.w32{width:32%}.w34{width:34%}.w36{width:36%}.w38{width:38%}.w40{width:40%}.w42{width:42%}.w44{width:44%}.w46{width:46%}.w48{width:48%}.w50{width:50%}.w52{width:52%}.w54{width:54%}.w56{width:56%}.w58{width:58%}.w60{width:60%}.w62{width:62%}.w64{width:64%}.w66{width:66%}.w68{width:68%}.w70{width:70%}.w72{width:72%}.w74{width:74%}.w76{width:76%}.w78{width:78%}.w80{width:80%}.w82{width:82%}.w84{width:84%}.w86{width:86%}.w88{width:88%}.w90{width:90%}.w92{width:92%}.w94{width:94%}.w96{width:96%}.w98{width:98%}.w100{width:100%}
+/* UI SDK dialog parts are unstyled. The look lives here. */
+.sheet{position:fixed;inset:0;margin:auto;width:min(34rem,92vw);height:fit-content;max-height:min(86vh,42rem);overflow:auto;background:var(--ground);color:var(--ink);border:1px solid var(--rule-2);padding:clamp(1.5rem,4vw,2.25rem);box-shadow:0 1rem 3rem rgb(15 20 22 / .18)}
+.sheet-kicker{font-size:.8125rem;color:var(--ink-3)}
+.sheet h3{font-size:clamp(1.4rem,2.6vw,1.9rem);line-height:1.05;letter-spacing:-.02em;margin-top:.35rem}
+.sheet-lede{margin-top:.5rem;color:var(--ink-2);font-size:.9375rem}
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1.5rem;margin-top:1.5rem;border-top:1px solid var(--rule);padding-top:1.25rem}
+.sheet-label{font-size:.8125rem;font-weight:600;color:var(--ink-3);margin-bottom:.4rem}
+.sheet-grid ul{font-size:.9375rem;color:var(--ink-2)}
+.terms{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.8125rem;color:var(--ink-3)}
+.close{margin-top:1.5rem;font:inherit;font-size:.875rem;font-weight:600;background:var(--ink);color:var(--ground);border:0;padding:.6rem 1.1rem;cursor:pointer}
+ui-dialog-backdrop{position:fixed;inset:0;background:rgb(15 20 22 / .34)}
+@media (hover:hover) and (pointer:fine){
+  .cta:hover{background:var(--signal);border-color:var(--signal)}
+  .more-btn:hover{color:var(--signal)}
+  .close:hover{background:var(--signal)}
+}
+@media (max-width:52rem){
+  table,tbody,tr,td,th{display:block}
+  thead{display:none}
+  tbody tr{display:grid;gap:.3rem 1rem;padding-block:1.1rem;border-bottom:1px solid var(--rule)}
+  tbody th{grid-column:1/-1;width:auto;padding:0;border:0}
+  tbody td{padding:0;border:0;text-align:left}
+  tbody td.num{padding-left:0;text-align:left;white-space:normal}
+  .ledger tr{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ledger td.bytes{grid-column:1/-1;margin:.45rem 0 .1rem}
+  .ledger td.num::before{display:block;font-size:.7rem;color:var(--ink-3);font-weight:400;margin-bottom:.15rem}
+  .ledger td:nth-of-type(2)::before{content:"blocking"}
+  .ledger td:nth-of-type(3)::before{content:"no size"}
+  .ledger td:nth-of-type(4)::before{content:"first byte"}
+  .ledger td.verdict{grid-column:1/-1;text-align:left;padding:0;margin-top:.35rem}
+  .bar{width:100%;margin-left:0;display:block;margin-top:.4rem}
+  #work-head + .note + table tr{grid-template-columns:auto auto 1fr}
+  #work-head + .note + table td.ends{grid-column:1/-1;padding:0 0 .4rem}
+  #work-head + .note + table td.num::before{display:block;font-size:.7rem;color:var(--ink-3);font-weight:400;margin-bottom:.15rem}
+  #work-head + .note + table td:nth-of-type(2)::before{content:"price"}
+  #work-head + .note + table td:nth-of-type(3)::before{content:"days"}
+  #work-head + .note + table td.more{grid-column:3;justify-self:end;align-self:end;padding:0;margin-top:.4rem}
+  dl.stats div{grid-template-columns:1fr;gap:.15rem}
+  h1{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="wrap">
+    <div class="meta">
+      <span>Henry Li, Hong Kong</span>
+      <span>Measured 19 November 2026</span>
+    </div>
+    <h1>Six builds. Fixed price, fixed days, measured at handover.</h1>
+    <p class="dek">Page speed is one row. The others are automation, integrations, a web app, an agent pipeline and ad creative. Each row carries what I can actually show for it, measured with the same script where a measurement exists.</p>
+    <a class="cta" href="mailto:lkhh@pm.me?subject=Project">Send me the job</a>
+  </div>
+</header>
+
+<main>
+
+  <section aria-labelledby="work-head">
+    <div class="wrap">
+      <h2 id="work-head">Six builds, each with the evidence behind it</h2>
+      <p class="note">Fixed price, fixed days. The line under each build is what I can show for it today: a measurement from the same script where one exists, a concrete deliverable where it does not. Scopes larger than a row get split before they get priced.</p>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Build</th>
+            <th scope="col">What it ends with</th>
+            <th scope="col" class="num">Price</th>
+            <th scope="col" class="num">Days</th>
+            <th scope="col" class="num">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row"><span class="diag">Landing page</span><span class="site">742 KB and 13 blocking scripts became 5 KB and none.</span></th>
+          <td class="ends">One page, written and built, with nothing in the critical path.</td>
+          <td class="num">$1,000</td>
+          <td class="num">3</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in Landing page">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 1</p>
+                <ui-dialog-title><h3>Landing page</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">One page, written and built, with nothing in the critical path.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>Copy tightened, not rewritten from zero</li><li>Hand-built page, no page builder</li><li>Measured before handover with this script</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>Who it is for, and the one action it should cause</li><li>Any brand assets that already exist</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$1,000 fixed, 3 days. Two revision rounds, then a scoped change order.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="diag">Workflow automation</span><span class="site">214 postings parsed in 1.6 s, and a rerun added nothing.</span></th>
+          <td class="ends">One manual job becomes a scheduled one, with failure alerts.</td>
+          <td class="num">$1,950</td>
+          <td class="num">7</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in Workflow automation">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 2</p>
+                <ui-dialog-title><h3>Workflow automation</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">One manual job becomes a scheduled one, with failure alerts.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>Input, transform, output, documented</li><li>Retries and a dead letter path</li><li>A run log you can read</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>A sample of the input and the output you want</li><li>Where it should run</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$1,950 fixed, 7 days. Two revision rounds, then a scoped change order.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="diag">API integration</span><span class="site">Two public APIs synced twice: 20 rows, 0 duplicates on the rerun.</span></th>
+          <td class="ends">Two systems kept in agreement, safe to run twice.</td>
+          <td class="num">$1,600</td>
+          <td class="num">5</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in API integration">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 3</p>
+                <ui-dialog-title><h3>API integration</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">Two systems kept in agreement, safe to run twice.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>Idempotent writes keyed on your identifiers</li><li>Backfill and reconcile commands</li><li>A schema map of both sides</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>Docs or sandbox keys for both systems</li><li>Which side owns the truth</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$1,600 fixed, 5 days. Two revision rounds, then a scoped change order.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="diag">Web app MVP</span><span class="site">This site runs on one: SQLite, 234 rows, a command line, no framework.</span></th>
+          <td class="ends">The version that survives its first hundred users.</td>
+          <td class="num">$5,600</td>
+          <td class="num">21</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in Web app MVP">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 4</p>
+                <ui-dialog-title><h3>Web app MVP</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">The version that survives its first hundred users.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>Authentication, one core flow, deploy pipeline</li><li>Error tracking and a rollback path</li><li>Handover notes, not a dependency</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>The one flow that must work on day one</li><li>Who uses it, and on what device</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$5,600 fixed, 21 days. Two revision rounds, then a scoped change order.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="diag">AI workflow</span><span class="site">234 postings in, 12 drafts out, and the model cannot invent a number.</span></th>
+          <td class="ends">An agent that does one job end to end, with a human gate.</td>
+          <td class="num">$4,000</td>
+          <td class="num">14</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in AI workflow">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 5</p>
+                <ui-dialog-title><h3>AI workflow</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">An agent that does one job end to end, with a human gate.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>One job automated, with a review step</li><li>A cost ceiling and a failure budget</li><li>A replayable log of every decision</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>The job, and the failure you actually fear</li><li>What a good result looks like</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$4,000 fixed, 14 days. Two revision rounds, then a scoped change order.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="diag">Meta ads management</span><span class="site">Campaigns report one number: spend, leads and cost per lead, weekly. Creative and tracking are mine, spend is yours.</span></th>
+          <td class="ends">Campaigns run to one reported number: cost per lead.</td>
+          <td class="num">$820</td>
+          <td class="num">2</td>
+          <td class="more">
+            <ui-dialog>
+              <ui-dialog-trigger><button class="more-btn" type="button" aria-label="What you get in Meta ads management">Details</button></ui-dialog-trigger>
+              <ui-dialog-backdrop hidden></ui-dialog-backdrop>
+              <ui-dialog-content class="sheet" hidden>
+                <p class="sheet-kicker">Offer 6</p>
+                <ui-dialog-title><h3>Meta ads management</h3></ui-dialog-title>
+                <ui-dialog-description><p class="sheet-lede">Campaigns run to one reported number: cost per lead.</p></ui-dialog-description>
+                <div class="sheet-grid">
+                  <div>
+                    <p class="sheet-label">You get</p>
+                    <ul><li>Campaign, pixel and conversion tracking set up</li><li>Creative variants tested against each other</li><li>Weekly report: spend, leads, cost per lead</li></ul>
+                  </div>
+                  <div>
+                    <p class="sheet-label">I need</p>
+                    <ul><li>Ad account access and a budget you control</li><li>What counts as a qualified lead</li></ul>
+                  </div>
+                </div>
+                <p class="terms">$820 fixed, 2 days. Spend is yours and paid direct to Meta. The fee covers setup and management, not ad spend.</p>
+                <ui-dialog-close><button class="close" type="button">Close</button></ui-dialog-close>
+              </ui-dialog-content>
+            </ui-dialog>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section aria-labelledby="ledger-head">
+    <div class="wrap">
+      <h2 id="ledger-head">The measurement behind row one</h2>
+      <p class="note">Eight live pages, fetched and checked the way a browser loads them. Domains are withheld here and named in the private teardown. Thresholds: 500 KB total, two blocking scripts, no image without dimensions, first byte under 400 ms. The last row is a page I rebuilt with the same tool.</p>
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th scope="col">Page</th>
+            <th scope="col">Weight</th>
+            <th scope="col" class="num">Blocking</th>
+            <th scope="col" class="num">Images without size</th>
+            <th scope="col" class="num">First byte</th>
+            <th scope="col" class="num">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row">
+            <span class="diag">Heaviest page measured: 2.7 MB</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">2,801 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w100"></span></span>
+          </td>
+          <td class="num ">1</td>
+          <td class="num bad">13</td>
+          <td class="num bad">891 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">930 KB, over the 500 KB budget</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">930 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w34"></span></span>
+          </td>
+          <td class="num ">1</td>
+          <td class="num ">0</td>
+          <td class="num ">236 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">13 scripts block the first paint</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">742 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w26"></span></span>
+          </td>
+          <td class="num bad">13</td>
+          <td class="num bad">71</td>
+          <td class="num ">130 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">26 of 27 images load eagerly</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">328 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w12"></span></span>
+          </td>
+          <td class="num ">0</td>
+          <td class="num ">0</td>
+          <td class="num ">209 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">3 scripts block the first paint</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">317 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w12"></span></span>
+          </td>
+          <td class="num bad">3</td>
+          <td class="num bad">6</td>
+          <td class="num bad">758 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">3 scripts block the first paint</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">291 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w10"></span></span>
+          </td>
+          <td class="num bad">3</td>
+          <td class="num bad">7</td>
+          <td class="num ">92 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">Within budget on every check</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">280 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w10"></span></span>
+          </td>
+          <td class="num ">1</td>
+          <td class="num ">0</td>
+          <td class="num ">134 ms</td>
+          <td class="verdict ">passes</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="diag">5 scripts block the first paint</span>
+            <span class="site">Private teardown</span>
+          </th>
+          <td class="bytes">
+            <span class="value">225 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w8"></span></span>
+          </td>
+          <td class="num bad">5</td>
+          <td class="num bad">36</td>
+          <td class="num bad">766 ms</td>
+          <td class="verdict bad">fails</td>
+        </tr>
+        <tr class="own">
+          <th scope="row">
+            <span class="diag">Landing page rebuilt with the same tool</span>
+            <span class="site">Authored in this repository, no images, no scripts</span>
+          </th>
+          <td class="bytes">
+            <span class="value">5 KB</span>
+            <span class="bar" aria-hidden="true"><span class="fill w2"></span></span>
+          </td>
+          <td class="num">0</td>
+          <td class="num">0</td>
+          <td class="num">3 ms</td>
+          <td class="verdict">passes</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="pipeline-head">
+    <div class="wrap">
+      <h2 id="pipeline-head">The numbers behind the other rows</h2>
+      <dl class="stats">
+        <div>
+          <dt>214 postings, 1.6 s</dt>
+          <dd>One hiring thread parsed into structured rows. By hand at 10 seconds each that is roughly 36 minutes, which is an estimate rather than a measurement.</dd>
+        </div>
+        <div>
+          <dt>20 listings, 0 duplicates on a rerun</dt>
+          <dd>A second identical sync adds nothing, so the job can run on a schedule without duplicating anything.</dd>
+        </div>
+        <div>
+          <dt>234 postings, 12 drafts</dt>
+          <dd>The system this page sits on top of: a typed pipeline, SQLite, one command per stage, and a review gate before anything is sent. It is the working sample behind the web app and agent rows.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+
+  <section aria-labelledby="close-head">
+    <div class="wrap">
+      <h2 id="close-head">Send the job, or send the URL.</h2>
+      <p class="close-note">Tell me which row you need and what it has to do. If you want the page measured first, you get the numbers, the three worst findings and what I would change. If it passes every check, I will say so instead of inventing work.</p>
+      <a class="cta" href="mailto:lkhh@pm.me?subject=Project">Send me the job</a>
+      <p class="cmd"><code>bun run portfolio/measure.ts https://your-site.com</code></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Measured 19 November 2026 with portfolio/measure.ts: document bytes, same origin assets, render blocking head scripts, image hygiene, viewport, time to first byte. Time to first byte moves between runs; weight and blocking script counts do not. The rebuilt row is a page authored in this repository and measured with the same tool, not the prospect's site rewritten.</p>
+  </div>
+</footer>
+
+<script type="module">
+// UI SDK dialogs, loaded on intent. The page reads and paints without this.
+const ui = import("./vendor/ui.js");
+let warm = false;
+const preload = (event) => {
+  if (warm || !event.target.closest("ui-dialog-trigger")) return;
+  warm = true;
+  ui.catch(() => {});
+};
+document.addEventListener("pointerover", preload, { capture: true });
+document.addEventListener("focusin", preload, { capture: true });
+document.addEventListener("click", async (event) => {
+  const trigger = event.target.closest("ui-dialog-trigger button");
+  if (!trigger || customElements.get("ui-dialog")) return;
+  event.preventDefault();
+  event.stopPropagation();
+  await ui;
+  trigger.click();
+}, { capture: true });
+</script>
+</body>
+</html>
